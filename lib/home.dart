@@ -28,6 +28,14 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
     });
   }
 
+  void _delete(int index){
+    setState(() {
+      _formFields[index]["name"]?.dispose();
+      _formFields[index]["email"]?.dispose();
+      _formFields.removeAt(index);
+    });
+  }
+
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
       for (var field in _formFields) {
@@ -63,6 +71,7 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
               Expanded(
@@ -77,17 +86,26 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Form - ${index}",style: TextStyle(fontWeight: FontWeight.bold),),
+                                  IconButton(onPressed: () => _delete(index), icon: Icon(Icons.delete))
+                                ],
+                              ),
                               TextFormField(
                                 controller: _formFields[index]['name'],
                                 decoration: InputDecoration(labelText: 'Name'),
-                                validator: validateName, // Custom validation
+                                validator: validateName,
+                                autovalidateMode: AutovalidateMode.onUnfocus,
                               ),
                               SizedBox(height: 8),
                               TextFormField(
                                 controller: _formFields[index]['email'],
                                 decoration: InputDecoration(labelText: 'Email'),
-                                validator: validateEmail, // Custom validation
-                              ),
+                                validator: validateEmail,
+                                autovalidateMode: AutovalidateMode.onUnfocus
+                              )
                             ],
                           ),
                         ),
