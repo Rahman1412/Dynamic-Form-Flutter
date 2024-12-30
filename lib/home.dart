@@ -1,4 +1,8 @@
+import 'package:dynamic_form/user.dart';
+import 'package:dynamic_form/user_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:hive_flutter/adapters.dart';
 
 class DynamicFormScreen extends StatefulWidget {
   @override
@@ -8,6 +12,20 @@ class DynamicFormScreen extends StatefulWidget {
 class _DynamicFormScreenState extends State<DynamicFormScreen> {
   final List<Map<String, TextEditingController>> _formFields = [];
   final _formKey = GlobalKey<FormState>();
+  late Box usersBox;
+  List users = [];
+
+  @override
+  void initState() {
+    usersBox = Hive.box("users");
+    super.initState();
+  }
+
+  void getUsers(){
+    print("Getting Users");
+    var noteList = usersBox.values.map((data) => User.fromJson(Map<String, dynamic>.from(data))).toList();
+    users = noteList;
+  }
 
   @override
   void dispose() {
@@ -41,8 +59,12 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
       for (var field in _formFields) {
         final name = field['name']?.text ?? '';
         final email = field['email']?.text ?? '';
-        print('Name: $name, Email: $email');
+        var user = User(name: name,email: email);
+        usersBox.add(user.toJson());
       }
+      setState(() {
+        _formFields.clear();
+      });
     }
   }
 
@@ -121,6 +143,12 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
                   ElevatedButton(
                     onPressed: _addFormField,
                     child: Text('Add Field'),
+                  ),
+                  ElevatedButton(
+                      onPressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => UserList()));
+                      },
+                      child: Text("View Users")
                   ),
                   ElevatedButton(
                     onPressed: _submitForm,
