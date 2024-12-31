@@ -9,7 +9,7 @@ class UserList extends StatefulWidget {
   State<UserList> createState() => _UserList();
 }
 
-class _UserList extends State<UserList> {
+class _UserList extends State<UserList>{
   late Box usersBox;
   List users = [];
 
@@ -44,79 +44,73 @@ class _UserList extends State<UserList> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async{
-        getUsers();
-        return true;
-    },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("All Users"),
-          centerTitle: true,
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Card(
-                        elevation: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("index : ${index}"),
-                                  Text("Name : ${users[index].name}"),
-                                  Text("Email : ${users[index].email}")
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(onPressed: (){
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => UpdateUser(index: index))
-                                    );
-                                  }, icon: const Icon(Icons.edit)),
-                                  IconButton(
-                                      onPressed: () => _delete(index),
-                                      icon: const Icon(Icons.delete)
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("All Users"),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Card(
+                      elevation: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("index : ${index}"),
+                                Text("Name : ${users[index].name}"),
+                                Text("Email : ${users[index].email}")
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                IconButton(onPressed: (){
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => UpdateUser(index: index))
+                                  );
+                                }, icon: const Icon(Icons.edit)),
+                                IconButton(
+                                    onPressed: () => _delete(index),
+                                    icon: const Icon(Icons.delete)
+                                )
+                              ],
+                            )
+                          ],
                         ),
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                }),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)
+                        )
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text("Go Back")
+                )
             ),
-            SizedBox(
-              width: double.infinity,
-              child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)
-                          )
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("Go Back")
-                  )
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
