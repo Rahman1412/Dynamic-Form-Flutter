@@ -10,10 +10,10 @@ class DynamicFormScreen extends StatefulWidget {
 }
 
 class _DynamicFormScreenState extends State<DynamicFormScreen> {
+
   final List<Map<String, TextEditingController>> _formFields = [];
   final _formKey = GlobalKey<FormState>();
   late Box usersBox;
-  List users = [];
 
   @override
   void initState() {
@@ -21,15 +21,8 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
     super.initState();
   }
 
-  void getUsers(){
-    print("Getting Users");
-    var noteList = usersBox.values.map((data) => User.fromJson(Map<String, dynamic>.from(data))).toList();
-    users = noteList;
-  }
-
   @override
   void dispose() {
-    // Dispose all controllers when the widget is removed
     for (var field in _formFields) {
       field['name']?.dispose();
       field['email']?.dispose();
@@ -88,12 +81,14 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Dynamic Form')),
+      appBar: AppBar(
+        title: Text('Add User'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
               Expanded(
@@ -119,14 +114,14 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
                                 controller: _formFields[index]['name'],
                                 decoration: InputDecoration(labelText: 'Name'),
                                 validator: validateName,
-                                autovalidateMode: AutovalidateMode.onUnfocus,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
                               ),
                               SizedBox(height: 8),
                               TextFormField(
                                 controller: _formFields[index]['email'],
                                 decoration: InputDecoration(labelText: 'Email'),
                                 validator: validateEmail,
-                                autovalidateMode: AutovalidateMode.onUnfocus
+                                autovalidateMode: AutovalidateMode.onUserInteraction
                               )
                             ],
                           ),
@@ -142,11 +137,14 @@ class _DynamicFormScreenState extends State<DynamicFormScreen> {
                 children: [
                   ElevatedButton(
                     onPressed: _addFormField,
-                    child: Text('Add Field'),
+                    child: Text('Add Users'),
                   ),
                   ElevatedButton(
-                      onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => UserList()));
+                      onPressed: () async{
+                        final result = await Navigator.push(context, MaterialPageRoute(builder: (context) => UserList()));
+                        if(result != null){
+                          print("My Result ${result}");
+                        }
                       },
                       child: Text("View Users")
                   ),
