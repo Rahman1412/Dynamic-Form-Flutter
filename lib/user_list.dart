@@ -16,14 +16,15 @@ class _UserList extends State<UserList>{
   @override
   void initState() {
     usersBox = Hive.box("users");
-    getUsers();
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("Page revisited or dependencies changed.");
+    if (ModalRoute.of(context)?.isCurrent ?? false) {
+      getUsers();
+    }
   }
 
   void getUsers() {
