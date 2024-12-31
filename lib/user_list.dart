@@ -11,7 +11,6 @@ class UserList extends StatefulWidget {
 
 class _UserList extends State<UserList>{
   late Box usersBox;
-  AppLifecycleState? _lastLifecycleState;
   List users = [];
 
   @override
